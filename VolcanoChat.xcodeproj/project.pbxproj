@@ -1,0 +1,505 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4E80D16C2F00B8AB0098B919 /* MarkdownText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D16B2F00B8AB0098B919 /* MarkdownText.swift */; };
+		4E80D1702F016F0A0098B919 /* ClipboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D16D2F016F0A0098B919 /* ClipboardHelper.swift */; };
+		4E80D1712F016F0A0098B919 /* ScreenRecordingPermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D16E2F016F0A0098B919 /* ScreenRecordingPermissionHelper.swift */; };
+		4E80D1722F016F0A0098B919 /* ScreenshotCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D16F2F016F0A0098B919 /* ScreenshotCapture.swift */; };
+		4E80D1742F016F1B0098B919 /* ScreenshotOverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D1732F016F1B0098B919 /* ScreenshotOverlayWindow.swift */; };
+		4E80D1762F016F2A0098B919 /* GlobalScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D1752F016F2A0098B919 /* GlobalScreenshotManager.swift */; };
+		4EDE84102EFE3A9400EFB166 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83FB2EFE3A9400EFB166 /* Conversation.swift */; };
+		4EDE84112EFE3A9400EFB166 /* ConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83FF2EFE3A9400EFB166 /* ConversationManager.swift */; };
+		4EDE84122EFE3A9400EFB166 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83FA2EFE3A9400EFB166 /* AudioRecorder.swift */; };
+		4EDE84132EFE3A9400EFB166 /* VolcanoLLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84012EFE3A9400EFB166 /* VolcanoLLMService.swift */; };
+		4EDE84142EFE3A9400EFB166 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE840E2EFE3A9400EFB166 /* SettingsView.swift */; };
+		4EDE84152EFE3A9400EFB166 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83F92EFE3A9400EFB166 /* AudioPlayer.swift */; };
+		4EDE84162EFE3A9400EFB166 /* VolcanoASRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84002EFE3A9400EFB166 /* VolcanoASRService.swift */; };
+		4EDE84172EFE3A9400EFB166 /* VolcanoChatbotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83F72EFE3A9400EFB166 /* VolcanoChatbotApp.swift */; };
+		4EDE84182EFE3A9400EFB166 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE840A2EFE3A9400EFB166 /* ChatView.swift */; };
+		4EDE84192EFE3A9400EFB166 /* InputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE840C2EFE3A9400EFB166 /* InputBar.swift */; };
+		4EDE841A2EFE3A9400EFB166 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83FC2EFE3A9400EFB166 /* Message.swift */; };
+		4EDE841B2EFE3A9400EFB166 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84052EFE3A9400EFB166 /* NetworkManager.swift */; };
+		4EDE841C2EFE3A9400EFB166 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE840B2EFE3A9400EFB166 /* ContentView.swift */; };
+		4EDE841D2EFE3A9400EFB166 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84042EFE3A9400EFB166 /* KeychainHelper.swift */; };
+		4EDE841E2EFE3A9400EFB166 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84082EFE3A9400EFB166 /* SettingsViewModel.swift */; };
+		4EDE841F2EFE3A9400EFB166 /* MessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE840D2EFE3A9400EFB166 /* MessageRow.swift */; };
+		4EDE84202EFE3A9400EFB166 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84072EFE3A9400EFB166 /* ChatViewModel.swift */; };
+		4EDE84212EFE3A9400EFB166 /* VolcanoTTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84022EFE3A9400EFB166 /* VolcanoTTSService.swift */; };
+		4EDE84222EFE3A9400EFB166 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EDE83F62EFE3A9400EFB166 /* Info.plist */; };
+		4EDE84252EFE42BB00EFB166 /* VolcanoConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84232EFE42BB00EFB166 /* VolcanoConfig.swift */; };
+		4EDE84262EFE42BB00EFB166 /* VolcanoSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84242EFE42BB00EFB166 /* VolcanoSigner.swift */; };
+		4EDE84282EFE5B6100EFB166 /* GlobalHotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84272EFE5B6100EFB166 /* GlobalHotkeyManager.swift */; };
+		4EDE842A2EFE5B7500EFB166 /* RecordingFloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE84292EFE5B7500EFB166 /* RecordingFloatingPanel.swift */; };
+		4EDE842C2EFE5B8200EFB166 /* GlobalRecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE842B2EFE5B8200EFB166 /* GlobalRecordingManager.swift */; };
+		6623649FBEF34DDB95DDA76F /* HotkeyRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6623649FBEF34DDB95DDA770 /* HotkeyRecorderView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4E80D16B2F00B8AB0098B919 /* MarkdownText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownText.swift; sourceTree = "<group>"; };
+		4E80D16D2F016F0A0098B919 /* ClipboardHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardHelper.swift; sourceTree = "<group>"; };
+		4E80D16E2F016F0A0098B919 /* ScreenRecordingPermissionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecordingPermissionHelper.swift; sourceTree = "<group>"; };
+		4E80D16F2F016F0A0098B919 /* ScreenshotCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotCapture.swift; sourceTree = "<group>"; };
+		4E80D1732F016F1B0098B919 /* ScreenshotOverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotOverlayWindow.swift; sourceTree = "<group>"; };
+		4E80D1752F016F2A0098B919 /* GlobalScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalScreenshotManager.swift; sourceTree = "<group>"; };
+		4EDE83E72EFE3A2F00EFB166 /* VolcanoChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VolcanoChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EDE83F62EFE3A9400EFB166 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4EDE83F72EFE3A9400EFB166 /* VolcanoChatbotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolcanoChatbotApp.swift; sourceTree = "<group>"; };
+		4EDE83F92EFE3A9400EFB166 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		4EDE83FA2EFE3A9400EFB166 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		4EDE83FB2EFE3A9400EFB166 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		4EDE83FC2EFE3A9400EFB166 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		4EDE83FF2EFE3A9400EFB166 /* ConversationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationManager.swift; sourceTree = "<group>"; };
+		4EDE84002EFE3A9400EFB166 /* VolcanoASRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolcanoASRService.swift; sourceTree = "<group>"; };
+		4EDE84012EFE3A9400EFB166 /* VolcanoLLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolcanoLLMService.swift; sourceTree = "<group>"; };
+		4EDE84022EFE3A9400EFB166 /* VolcanoTTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolcanoTTSService.swift; sourceTree = "<group>"; };
+		4EDE84042EFE3A9400EFB166 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		4EDE84052EFE3A9400EFB166 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		4EDE84072EFE3A9400EFB166 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		4EDE84082EFE3A9400EFB166 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		4EDE840A2EFE3A9400EFB166 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		4EDE840B2EFE3A9400EFB166 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4EDE840C2EFE3A9400EFB166 /* InputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBar.swift; sourceTree = "<group>"; };
+		4EDE840D2EFE3A9400EFB166 /* MessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRow.swift; sourceTree = "<group>"; };
+		4EDE840E2EFE3A9400EFB166 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4EDE84232EFE42BB00EFB166 /* VolcanoConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolcanoConfig.swift; sourceTree = "<group>"; };
+		4EDE84242EFE42BB00EFB166 /* VolcanoSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolcanoSigner.swift; sourceTree = "<group>"; };
+		4EDE84272EFE5B6100EFB166 /* GlobalHotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyManager.swift; sourceTree = "<group>"; };
+		4EDE84292EFE5B7500EFB166 /* RecordingFloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingFloatingPanel.swift; sourceTree = "<group>"; };
+		4EDE842B2EFE5B8200EFB166 /* GlobalRecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalRecordingManager.swift; sourceTree = "<group>"; };
+		6623649FBEF34DDB95DDA770 /* HotkeyRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyRecorderView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		4EDE83E92EFE3A2F00EFB166 /* VolcanoChat */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VolcanoChat;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4EDE83E42EFE3A2F00EFB166 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4EDE83DE2EFE3A2F00EFB166 = {
+			isa = PBXGroup;
+			children = (
+				4EDE83F82EFE3A9400EFB166 /* App */,
+				4EDE83FD2EFE3A9400EFB166 /* Models */,
+				4EDE83FE2EFE3A9400EFB166 /* Resources */,
+				4EDE84032EFE3A9400EFB166 /* Services */,
+				4EDE84062EFE3A9400EFB166 /* Utils */,
+				4EDE84092EFE3A9400EFB166 /* ViewModels */,
+				4EDE840F2EFE3A9400EFB166 /* Views */,
+				4EDE83E92EFE3A2F00EFB166 /* VolcanoChat */,
+				4EDE83E82EFE3A2F00EFB166 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4EDE83E82EFE3A2F00EFB166 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4EDE83E72EFE3A2F00EFB166 /* VolcanoChat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4EDE83F82EFE3A9400EFB166 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4EDE83F62EFE3A9400EFB166 /* Info.plist */,
+				4EDE83F72EFE3A9400EFB166 /* VolcanoChatbotApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		4EDE83FD2EFE3A9400EFB166 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4EDE83F92EFE3A9400EFB166 /* AudioPlayer.swift */,
+				4EDE83FA2EFE3A9400EFB166 /* AudioRecorder.swift */,
+				4EDE83FB2EFE3A9400EFB166 /* Conversation.swift */,
+				4EDE83FC2EFE3A9400EFB166 /* Message.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4EDE83FE2EFE3A9400EFB166 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4EDE84032EFE3A9400EFB166 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4EDE83FF2EFE3A9400EFB166 /* ConversationManager.swift */,
+				4EDE84002EFE3A9400EFB166 /* VolcanoASRService.swift */,
+				4EDE84012EFE3A9400EFB166 /* VolcanoLLMService.swift */,
+				4EDE84022EFE3A9400EFB166 /* VolcanoTTSService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4EDE84062EFE3A9400EFB166 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4E80D16D2F016F0A0098B919 /* ClipboardHelper.swift */,
+				4E80D16E2F016F0A0098B919 /* ScreenRecordingPermissionHelper.swift */,
+				4E80D16F2F016F0A0098B919 /* ScreenshotCapture.swift */,
+				4EDE84272EFE5B6100EFB166 /* GlobalHotkeyManager.swift */,
+				4EDE84232EFE42BB00EFB166 /* VolcanoConfig.swift */,
+				4EDE84242EFE42BB00EFB166 /* VolcanoSigner.swift */,
+				4EDE84042EFE3A9400EFB166 /* KeychainHelper.swift */,
+				4EDE84052EFE3A9400EFB166 /* NetworkManager.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		4EDE84092EFE3A9400EFB166 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				4E80D1752F016F2A0098B919 /* GlobalScreenshotManager.swift */,
+				4EDE842B2EFE5B8200EFB166 /* GlobalRecordingManager.swift */,
+				4EDE84072EFE3A9400EFB166 /* ChatViewModel.swift */,
+				4EDE84082EFE3A9400EFB166 /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		4EDE840F2EFE3A9400EFB166 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4E80D1732F016F1B0098B919 /* ScreenshotOverlayWindow.swift */,
+				4E80D16B2F00B8AB0098B919 /* MarkdownText.swift */,
+				4EDE84292EFE5B7500EFB166 /* RecordingFloatingPanel.swift */,
+				4EDE840A2EFE3A9400EFB166 /* ChatView.swift */,
+				4EDE840B2EFE3A9400EFB166 /* ContentView.swift */,
+				6623649FBEF34DDB95DDA770 /* HotkeyRecorderView.swift */,
+				4EDE840C2EFE3A9400EFB166 /* InputBar.swift */,
+				4EDE840D2EFE3A9400EFB166 /* MessageRow.swift */,
+				4EDE840E2EFE3A9400EFB166 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4EDE83E62EFE3A2F00EFB166 /* VolcanoChat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EDE83F32EFE3A3100EFB166 /* Build configuration list for PBXNativeTarget "VolcanoChat" */;
+			buildPhases = (
+				4EDE83E32EFE3A2F00EFB166 /* Sources */,
+				4EDE83E42EFE3A2F00EFB166 /* Frameworks */,
+				4EDE83E52EFE3A2F00EFB166 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4EDE83E92EFE3A2F00EFB166 /* VolcanoChat */,
+			);
+			name = VolcanoChat;
+			packageProductDependencies = (
+			);
+			productName = VolcanoChat;
+			productReference = 4EDE83E72EFE3A2F00EFB166 /* VolcanoChat.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4EDE83DF2EFE3A2F00EFB166 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					4EDE83E62EFE3A2F00EFB166 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+				};
+			};
+			buildConfigurationList = 4EDE83E22EFE3A2F00EFB166 /* Build configuration list for PBXProject "VolcanoChat" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4EDE83DE2EFE3A2F00EFB166;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4EDE83E82EFE3A2F00EFB166 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4EDE83E62EFE3A2F00EFB166 /* VolcanoChat */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4EDE83E52EFE3A2F00EFB166 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EDE84222EFE3A9400EFB166 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4EDE83E32EFE3A2F00EFB166 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EDE84252EFE42BB00EFB166 /* VolcanoConfig.swift in Sources */,
+				4EDE84262EFE42BB00EFB166 /* VolcanoSigner.swift in Sources */,
+				4E80D1702F016F0A0098B919 /* ClipboardHelper.swift in Sources */,
+				4E80D1712F016F0A0098B919 /* ScreenRecordingPermissionHelper.swift in Sources */,
+				4E80D1722F016F0A0098B919 /* ScreenshotCapture.swift in Sources */,
+				4EDE84102EFE3A9400EFB166 /* Conversation.swift in Sources */,
+				4EDE84112EFE3A9400EFB166 /* ConversationManager.swift in Sources */,
+				4EDE84282EFE5B6100EFB166 /* GlobalHotkeyManager.swift in Sources */,
+				4EDE84122EFE3A9400EFB166 /* AudioRecorder.swift in Sources */,
+				4EDE84132EFE3A9400EFB166 /* VolcanoLLMService.swift in Sources */,
+				4E80D16C2F00B8AB0098B919 /* MarkdownText.swift in Sources */,
+				4EDE84142EFE3A9400EFB166 /* SettingsView.swift in Sources */,
+				4EDE84152EFE3A9400EFB166 /* AudioPlayer.swift in Sources */,
+				4EDE84162EFE3A9400EFB166 /* VolcanoASRService.swift in Sources */,
+				4E80D1762F016F2A0098B919 /* GlobalScreenshotManager.swift in Sources */,
+				4EDE84172EFE3A9400EFB166 /* VolcanoChatbotApp.swift in Sources */,
+				4EDE84182EFE3A9400EFB166 /* ChatView.swift in Sources */,
+				4EDE84192EFE3A9400EFB166 /* InputBar.swift in Sources */,
+				4E80D1742F016F1B0098B919 /* ScreenshotOverlayWindow.swift in Sources */,
+				6623649FBEF34DDB95DDA76F /* HotkeyRecorderView.swift in Sources */,
+				4EDE842C2EFE5B8200EFB166 /* GlobalRecordingManager.swift in Sources */,
+				4EDE841A2EFE3A9400EFB166 /* Message.swift in Sources */,
+				4EDE841B2EFE3A9400EFB166 /* NetworkManager.swift in Sources */,
+				4EDE841C2EFE3A9400EFB166 /* ContentView.swift in Sources */,
+				4EDE841D2EFE3A9400EFB166 /* KeychainHelper.swift in Sources */,
+				4EDE841E2EFE3A9400EFB166 /* SettingsViewModel.swift in Sources */,
+				4EDE841F2EFE3A9400EFB166 /* MessageRow.swift in Sources */,
+				4EDE84202EFE3A9400EFB166 /* ChatViewModel.swift in Sources */,
+				4EDE842A2EFE5B7500EFB166 /* RecordingFloatingPanel.swift in Sources */,
+				4EDE84212EFE3A9400EFB166 /* VolcanoTTSService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4EDE83F12EFE3A3100EFB166 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4EDE83F22EFE3A3100EFB166 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		4EDE83F42EFE3A3100EFB166 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VolcanoChat/VolcanoChat.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "需要使用麦克风进行语音输入";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.VolcanoChat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4EDE83F52EFE3A3100EFB166 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VolcanoChat/VolcanoChat.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "需要使用麦克风进行语音输入";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.VolcanoChat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4EDE83E22EFE3A2F00EFB166 /* Build configuration list for PBXProject "VolcanoChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EDE83F12EFE3A3100EFB166 /* Debug */,
+				4EDE83F22EFE3A3100EFB166 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4EDE83F32EFE3A3100EFB166 /* Build configuration list for PBXNativeTarget "VolcanoChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EDE83F42EFE3A3100EFB166 /* Debug */,
+				4EDE83F52EFE3A3100EFB166 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4EDE83DF2EFE3A2F00EFB166 /* Project object */;
+}
