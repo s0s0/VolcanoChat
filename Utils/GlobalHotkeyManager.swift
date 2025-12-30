@@ -110,10 +110,10 @@ class GlobalHotkeyManager {
 
     private func describeHotkey() -> String {
         var parts: [String] = []
-        if currentModifiers & 0x00000100 != 0 { parts.append("⇧") }  // shiftKey
-        if currentModifiers & 0x00001000 != 0 { parts.append("⌃") }  // controlKey
-        if currentModifiers & 0x00000800 != 0 { parts.append("⌥") }  // optionKey
-        if currentModifiers & 0x00000100 != 0 { parts.append("⌘") }  // cmdKey
+        if currentModifiers & UInt32(controlKey) != 0 { parts.append("⌃") }
+        if currentModifiers & UInt32(optionKey) != 0 { parts.append("⌥") }
+        if currentModifiers & UInt32(shiftKey) != 0 { parts.append("⇧") }
+        if currentModifiers & UInt32(cmdKey) != 0 { parts.append("⌘") }
         if let keyCode = currentKeyCode, let keyName = keyCodeToString(keyCode) {
             parts.append(keyName)
         }
@@ -154,12 +154,12 @@ class GlobalHotkeyManager {
         let flags = event.flags
         let eventKeyCode = event.getIntegerValueField(.keyboardEventKeycode)
 
-        // 获取当前按下的修饰键
+        // 获取当前按下的修饰键（转换为 Carbon 修饰键掩码）
         var pressedModifiers: UInt32 = 0
-        if flags.contains(.maskCommand) { pressedModifiers |= 0x00000100 }  // cmdKey
-        if flags.contains(.maskAlternate) { pressedModifiers |= 0x00000800 }  // optionKey
-        if flags.contains(.maskControl) { pressedModifiers |= 0x00001000 }  // controlKey
-        if flags.contains(.maskShift) { pressedModifiers |= 0x00020000 }  // shiftKey
+        if flags.contains(.maskCommand) { pressedModifiers |= UInt32(cmdKey) }
+        if flags.contains(.maskAlternate) { pressedModifiers |= UInt32(optionKey) }
+        if flags.contains(.maskControl) { pressedModifiers |= UInt32(controlKey) }
+        if flags.contains(.maskShift) { pressedModifiers |= UInt32(shiftKey) }
 
         // 检查是否匹配自定义快捷键
         let modifiersMatch = (pressedModifiers == currentModifiers)
