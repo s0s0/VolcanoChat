@@ -22,6 +22,8 @@ class ScreenshotOverlayWindow: NSWindow {
 
     var onRegionSelected: ((ScreenshotResult) -> Void)?
     var onCancelled: (() -> Void)?
+    var onSelectionCompleted: ((ScreenshotResult) -> Void)?  // 选区完成回调
+    var onDrawingsChanged: ((ScreenshotResult) -> Void)?  // 涂鸦更新回调
 
     private var localEventMonitor: Any?
     private var globalEventMonitor: Any?
@@ -54,6 +56,14 @@ class ScreenshotOverlayWindow: NSWindow {
             },
             onCancel: { [weak self] in
                 self?.onCancelled?()
+            },
+            onSelectionCompleted: { [weak self] result in
+                // 通知选区已完成
+                self?.onSelectionCompleted?(result)
+            },
+            onDrawingsChanged: { [weak self] result in
+                // 通知涂鸦已更新
+                self?.onDrawingsChanged?(result)
             }
         )
 
@@ -132,6 +142,8 @@ struct ScreenshotSelectionView: View {
 
     let onComplete: (ScreenshotResult) -> Void
     let onCancel: () -> Void
+    let onSelectionCompleted: (ScreenshotResult) -> Void  // 选区完成回调（用于通知窗口）
+    let onDrawingsChanged: (ScreenshotResult) -> Void  // 涂鸦更新回调
 
     var body: some View {
         GeometryReader { geometry in
@@ -400,6 +412,12 @@ struct ScreenshotSelectionView: View {
                         if isDrawing {
                             if let path = currentDrawingPath {
                                 drawingPaths.append(path)
+
+                                // 通知涂鸦已更新
+                                if let rect = finalRect {
+                                    let result = ScreenshotResult(rect: rect, drawings: drawingPaths)
+                                    onDrawingsChanged(result)
+                                }
                             }
                             currentDrawingPath = nil
                             isDrawing = false
@@ -418,6 +436,10 @@ struct ScreenshotSelectionView: View {
                                     finalRect = rect
                                     isSelectionComplete = true
                                     isDragging = false
+
+                                    // 通知窗口选区已完成
+                                    let result = ScreenshotResult(rect: rect, drawings: drawingPaths)
+                                    onSelectionCompleted(result)
                                 }
                             } else {
                                 // 选区太小，重置
@@ -485,6 +507,12 @@ struct ScreenshotSelectionView: View {
         },
         onCancel: {
             print("Cancelled")
+        },
+        onSelectionCompleted: { result in
+            print("Selection completed: \(result.rect)")
+        },
+        onDrawingsChanged: { result in
+            print("Drawings changed: \(result.drawings.count)")
         }
     )
     .frame(width: 800, height: 600)

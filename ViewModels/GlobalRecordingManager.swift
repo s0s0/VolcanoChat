@@ -37,6 +37,13 @@ class GlobalRecordingManager: ObservableObject {
     private func startRecording() {
         guard !isRecording else { return }
 
+        // 检查是否在截图状态中，如果是，转发给截图管理器
+        if GlobalScreenshotManager.shared.isCapturing {
+            print("⚠️ [Global] 截图状态中，将录音转发给截图管理器")
+            GlobalScreenshotManager.shared.handleGlobalRecordingPressed()
+            return
+        }
+
         print("🎤 [Global] 开始全局录音")
 
         // 先检查麦克风权限
@@ -71,6 +78,13 @@ class GlobalRecordingManager: ObservableObject {
     }
 
     private func stopRecording() {
+        // 检查是否在截图状态中，如果是，转发给截图管理器
+        if GlobalScreenshotManager.shared.isCapturing {
+            print("⚠️ [Global] 截图状态中，将录音释放转发给截图管理器")
+            GlobalScreenshotManager.shared.handleGlobalRecordingReleased()
+            return
+        }
+
         guard isRecording else { return }
 
         print("🎤 [Global] 停止全局录音")

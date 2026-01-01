@@ -9,16 +9,24 @@ class GlobalScreenshotManager: ObservableObject {
     static let shared = GlobalScreenshotManager()
 
     @Published var isCapturing = false
+    @Published var isRecording = false  // 录音状态
 
     private var hotkeyManager: GlobalHotkeyManager?
     private var overlayWindow: ScreenshotOverlayWindow?
     private let screenshotCapture = ScreenshotCapture()
+    private let audioRecorder = AudioRecorder()
+    private let conversationManager = ConversationManager.shared
+    private let asrService = VolcanoASRService.shared
 
     private var currentKeyCode: UInt16?
     private var currentModifiers: UInt32 = 0
 
     // 保存需要隐藏的窗口列表，以便稍后恢复
     private var hiddenWindows: [NSWindow] = []
+
+    // 录音相关
+    private var currentRecordingURL: URL?
+    private var pendingScreenshotResult: ScreenshotResult?  // 等待语音识别的截图结果
 
     private init() {
         print("🎬 [GlobalScreenshot] 初始化截图管理器")
@@ -120,6 +128,21 @@ class GlobalScreenshotManager: ObservableObject {
 
         overlayWindow?.onCancelled = { [weak self] in
             self?.cancelScreenshot()
+        }
+
+        overlayWindow?.onSelectionCompleted = { [weak self] result in
+            // 保存截图结果，用于后续语音录音
+            self?.pendingScreenshotResult = result
+            print("✅ [GlobalScreenshot] 选区已完成，保存截图结果")
+            print("  - 区域: \(result.rect)")
+            print("  - 涂鸦数量: \(result.drawings.count)")
+        }
+
+        overlayWindow?.onDrawingsChanged = { [weak self] result in
+            // 涂鸦更新时，更新截图结果
+            self?.pendingScreenshotResult = result
+            print("🎨 [GlobalScreenshot] 涂鸦已更新")
+            print("  - 涂鸦数量: \(result.drawings.count)")
         }
 
         overlayWindow?.show()
@@ -246,6 +269,209 @@ class GlobalScreenshotManager: ObservableObject {
         return newImage
     }
 
+    // MARK: - Voice Recording
+
+    /// 开始语音录音（在截图状态中）
+    private func startVoiceRecording(with result: ScreenshotResult) {
+        guard !isRecording else {
+            print("⚠️ [GlobalScreenshot] 已经在录音中")
+            return
+        }
+
+        print("🎤 [GlobalScreenshot] 开始语音录音")
+        print("📸 [GlobalScreenshot] 保存截图结果:")
+        print("  - 区域: \(result.rect)")
+        print("  - 涂鸦数量: \(result.drawings.count)")
+
+        // 保存截图结果，等待语音识别完成后一起发送
+        pendingScreenshotResult = result
+
+        // 检查麦克风权限
+        audioRecorder.requestPermission { [weak self] granted in
+            guard let self = self else { return }
+
+            if !granted {
+                print("❌ [GlobalScreenshot] 麦克风权限被拒绝")
+                Task { @MainActor in
+                    self.showMicrophoneAlert()
+                    self.pendingScreenshotResult = nil
+                }
+                return
+            }
+
+            Task { @MainActor in
+                self.isRecording = true
+
+                // 开始录音
+                if let url = self.audioRecorder.startRecording() {
+                    self.currentRecordingURL = url
+                    print("✅ [GlobalScreenshot] 录音已开始，文件: \(url.lastPathComponent)")
+                } else {
+                    print("❌ [GlobalScreenshot] 录音启动失败")
+                    self.isRecording = false
+                    self.pendingScreenshotResult = nil
+                }
+            }
+        }
+    }
+
+    /// 停止语音录音并发送截图+语音内容
+    private func stopVoiceRecording() async {
+        guard isRecording else {
+            print("⚠️ [GlobalScreenshot] 没有在录音")
+            return
+        }
+
+        print("🎤 [GlobalScreenshot] 停止语音录音")
+        isRecording = false
+
+        // 停止录音并获取URL
+        guard let audioURL = audioRecorder.stopRecording() else {
+            print("❌ [GlobalScreenshot] 录音文件不存在")
+            pendingScreenshotResult = nil
+            return
+        }
+
+        print("📁 [GlobalScreenshot] 录音文件路径: \(audioURL.path)")
+
+        // 检查是否有待发送的截图结果
+        guard let screenshotResult = pendingScreenshotResult else {
+            print("❌ [GlobalScreenshot] 没有待发送的截图")
+            print("⚠️ [GlobalScreenshot] pendingScreenshotResult 为 nil")
+            return
+        }
+
+        print("✅ [GlobalScreenshot] 找到待发送的截图结果")
+        print("  - 区域: \(screenshotResult.rect)")
+        print("  - 涂鸦数量: \(screenshotResult.drawings.count)")
+
+        // 隐藏选择窗口
+        overlayWindow?.hide()
+
+        // 短暂延迟确保窗口完全隐藏
+        try? await Task.sleep(nanoseconds: 100_000_000)  // 0.1 秒
+
+        print("📸 [GlobalScreenshot] 开始执行截图...")
+
+        // 执行截图（会自动排除应用窗口）
+        guard var image = await screenshotCapture.capture(rect: screenshotResult.rect) else {
+            print("❌ [GlobalScreenshot] 截图失败")
+            showErrorAlert(message: "截图失败，请重试")
+            resetState()
+            pendingScreenshotResult = nil
+            return
+        }
+
+        print("✅ [GlobalScreenshot] 截图执行成功")
+        print("  - 图片尺寸: \(image.size.width) x \(image.size.height)")
+
+        // 如果有涂鸦，将涂鸦渲染到图片上
+        if !screenshotResult.drawings.isEmpty {
+            print("🎨 [GlobalScreenshot] 开始渲染涂鸦...")
+            image = renderDrawingsOnImage(image, drawings: screenshotResult.drawings, rect: screenshotResult.rect)
+            print("✅ [GlobalScreenshot] 涂鸦已渲染到截图")
+        }
+
+        print("🖼️ [GlobalScreenshot] 开始转换图片为 PNG...")
+
+        // 创建图片附件
+        guard let imageData = image.tiffRepresentation else {
+            print("❌ [GlobalScreenshot] TIFF 转换失败")
+            showErrorAlert(message: "图片处理失败，请重试")
+            resetState()
+            pendingScreenshotResult = nil
+            return
+        }
+
+        print("✅ [GlobalScreenshot] TIFF 数据大小: \(imageData.count) bytes")
+
+        guard let bitmapRep = NSBitmapImageRep(data: imageData) else {
+            print("❌ [GlobalScreenshot] BitmapRep 创建失败")
+            showErrorAlert(message: "图片处理失败，请重试")
+            resetState()
+            pendingScreenshotResult = nil
+            return
+        }
+
+        print("✅ [GlobalScreenshot] BitmapRep 创建成功")
+
+        guard let pngData = bitmapRep.representation(using: .png, properties: [:]) else {
+            print("❌ [GlobalScreenshot] PNG 转换失败")
+            showErrorAlert(message: "图片处理失败，请重试")
+            resetState()
+            pendingScreenshotResult = nil
+            return
+        }
+
+        print("✅ [GlobalScreenshot] PNG 转换成功，数据大小: \(pngData.count) bytes")
+
+        let imageAttachment = ImageAttachment(
+            data: pngData,
+            mimeType: "image/png",
+            width: Int(image.size.width),
+            height: Int(image.size.height)
+        )
+
+        print("✅ [GlobalScreenshot] 图片附件已创建:")
+        print("  - 尺寸: \(Int(image.size.width)) x \(Int(image.size.height))")
+        print("  - 数据大小: \(pngData.count) bytes")
+
+        do {
+            // 语音转文字
+            let recognizedText = try await asrService.recognizeSpeech(audioURL: audioURL)
+
+            if recognizedText.isEmpty {
+                print("⚠️ [GlobalScreenshot] 语音识别为空")
+                showErrorAlert(message: "无法识别语音内容")
+                resetState()
+                pendingScreenshotResult = nil
+                return
+            }
+
+            print("✅ [GlobalScreenshot] 语音识别成功: \(recognizedText)")
+            print("📤 [GlobalScreenshot] 准备发送消息:")
+            print("  - 文本: \(recognizedText)")
+            print("  - 图片数量: 1")
+
+            // 发送消息（图片 + 文本）
+            await conversationManager.sendMessage(text: recognizedText, images: [imageAttachment])
+            print("✅ [GlobalScreenshot] 截图和语音内容已发送")
+
+            // 恢复应用窗口（让用户看到聊天界面）
+            restoreApplicationWindows()
+
+            // 显示成功反馈
+            showSuccessFeedback(message: "截图和语音已发送给 AI")
+
+            resetState()
+            pendingScreenshotResult = nil
+
+        } catch {
+            print("❌ [GlobalScreenshot] 语音识别失败: \(error)")
+            showErrorAlert(message: "语音识别失败: \(error.localizedDescription)")
+
+            // 恢复应用窗口
+            restoreApplicationWindows()
+
+            resetState()
+            pendingScreenshotResult = nil
+        }
+    }
+
+    private func showMicrophoneAlert() {
+        let alert = NSAlert()
+        alert.messageText = "需要麦克风权限"
+        alert.informativeText = "语音输入功能需要麦克风权限。\n\n请前往：\n系统设置 → 隐私与安全性 → 麦克风\n\n将 VolcanoChat 添加到列表中。"
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "打开系统设置")
+        alert.addButton(withTitle: "稍后")
+
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone")!)
+        }
+    }
+
     private func resetState() {
         overlayWindow?.hide()
         overlayWindow = nil
@@ -259,6 +485,10 @@ class GlobalScreenshotManager: ObservableObject {
     // MARK: - User Feedback
 
     private func showSuccessFeedback() {
+        showSuccessFeedback(message: "截图已保存到剪贴板")
+    }
+
+    private func showSuccessFeedback(message: String) {
         // 播放系统提示音
         NSSound.beep()
 
@@ -266,7 +496,7 @@ class GlobalScreenshotManager: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let notification = NSUserNotification()
             notification.title = "截图成功"
-            notification.informativeText = "截图已保存到剪贴板"
+            notification.informativeText = message
             notification.soundName = nil  // 已经播放过提示音了
 
             NSUserNotificationCenter.default.deliver(notification)
@@ -289,6 +519,35 @@ class GlobalScreenshotManager: ObservableObject {
     /// 手动触发截图（用于测试或其他触发方式）
     func triggerScreenshot() {
         startScreenshot()
+    }
+
+    /// 处理全局录音快捷键按下（从 GlobalRecordingManager 转发）
+    func handleGlobalRecordingPressed() {
+        guard isCapturing else {
+            print("⚠️ [GlobalScreenshot] 无法处理录音：未在截图状态")
+            return
+        }
+
+        guard let result = pendingScreenshotResult else {
+            print("⚠️ [GlobalScreenshot] 无法处理录音：无待处理的截图结果")
+            return
+        }
+
+        print("✅ [GlobalScreenshot] 接收到全局录音按下事件")
+        startVoiceRecording(with: result)
+    }
+
+    /// 处理全局录音快捷键释放（从 GlobalRecordingManager 转发）
+    func handleGlobalRecordingReleased() {
+        guard isRecording else {
+            print("⚠️ [GlobalScreenshot] 无法处理录音释放：未在录音状态")
+            return
+        }
+
+        print("✅ [GlobalScreenshot] 接收到全局录音释放事件")
+        Task {
+            await stopVoiceRecording()
+        }
     }
 
     /// 停止快捷键监听
