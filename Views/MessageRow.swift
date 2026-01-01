@@ -11,22 +11,32 @@ struct MessageRow: View {
             }
 
             VStack(alignment: message.role == .user ? .trailing : .leading, spacing: 2) {
-                // 使用 Markdown 渲染（仅对 assistant 消息）
-                if message.role == .assistant {
-                    MarkdownText(content: message.content, textColor: messageForeground)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
-                        .background(messageBackground)
-                        .clipShape(MessageBubble(isFromCurrentUser: message.role == .user))
-                } else {
-                    Text(message.content)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
-                        .background(messageBackground)
-                        .foregroundColor(messageForeground)
-                        .clipShape(MessageBubble(isFromCurrentUser: message.role == .user))
-                        .textSelection(.enabled)
+                // 消息内容气泡
+                VStack(alignment: .leading, spacing: 8) {
+                    // 图片内容
+                    if message.hasImages {
+                        ImageGridView(attachments: message.imageAttachments)
+                            .padding(.horizontal, message.content.isEmpty ? 0 : 14)
+                            .padding(.top, message.content.isEmpty ? 0 : 10)
+                    }
+
+                    // 文本内容
+                    if !message.content.isEmpty {
+                        if message.role == .assistant {
+                            MarkdownText(content: message.content, textColor: messageForeground)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 10)
+                        } else {
+                            Text(message.content)
+                                .foregroundColor(messageForeground)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 10)
+                                .textSelection(.enabled)
+                        }
+                    }
                 }
+                .background(messageBackground)
+                .clipShape(MessageBubble(isFromCurrentUser: message.role == .user))
 
                 Text(formatTime(message.timestamp))
                     .font(.system(size: 10))

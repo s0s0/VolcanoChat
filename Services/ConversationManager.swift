@@ -43,6 +43,16 @@ class ConversationManager: ObservableObject {
         await generateResponse()
     }
 
+    // 发送多模态消息（文本 + 图片）
+    func sendMessage(text: String, images: [ImageAttachment]) async {
+        let userMessage = Message(role: .user, text: text, images: images)
+        await MainActor.run {
+            conversation.addMessage(userMessage)
+        }
+
+        await generateResponse()
+    }
+
     func sendVoiceMessage(audioURL: URL) async {
         await MainActor.run {
             isLoading = true

@@ -34,13 +34,13 @@ class SettingsViewModel: ObservableObject {
         }
         recordingHotkeyModifiers = UserDefaults.standard.object(forKey: "recordingHotkeyModifiers") as? UInt32 ?? 0x00000800  // optionKey = 0x800
 
-        // 加载截图快捷键设置（默认值：⌘⇧A）
+        // 加载截图快捷键设置（默认值：⌃A）
         if let keyCode = UserDefaults.standard.object(forKey: "screenshotHotkeyCode") as? UInt16 {
             screenshotHotkeyCode = keyCode
         } else {
             screenshotHotkeyCode = 0  // 'A' key
         }
-        screenshotHotkeyModifiers = UserDefaults.standard.object(forKey: "screenshotHotkeyModifiers") as? UInt32 ?? (UInt32(NX_COMMANDMASK) | UInt32(NX_SHIFTMASK))  // ⌘⇧
+        screenshotHotkeyModifiers = UserDefaults.standard.object(forKey: "screenshotHotkeyModifiers") as? UInt32 ?? UInt32(NX_CONTROLMASK)  // ⌃
     }
 
     func saveSettings() {

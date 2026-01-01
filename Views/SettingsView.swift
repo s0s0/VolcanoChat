@@ -116,7 +116,7 @@ struct SettingsView: View {
                         modifiers: $viewModel.screenshotHotkeyModifiers
                     )
 
-                    Text("设置全局快捷键以截图（默认：⌘⇧A，截图仅保存到剪贴板）")
+                    Text("设置全局快捷键以截图（默认：⌃A，截图仅保存到剪贴板）")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }

@@ -94,6 +94,7 @@ struct ChatView: View {
                 // 输入栏
                 InputBar(
                     text: $viewModel.inputText,
+                    imageAttachments: $viewModel.imageAttachments,
                     onSend: {
                         viewModel.sendTextMessage()
                     },

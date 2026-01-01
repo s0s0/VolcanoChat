@@ -13,6 +13,9 @@
 		4E80D1722F016F0A0098B919 /* ScreenshotCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D16F2F016F0A0098B919 /* ScreenshotCapture.swift */; };
 		4E80D1742F016F1B0098B919 /* ScreenshotOverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D1732F016F1B0098B919 /* ScreenshotOverlayWindow.swift */; };
 		4E80D1762F016F2A0098B919 /* GlobalScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D1752F016F2A0098B919 /* GlobalScreenshotManager.swift */; };
+		4E80D17A2F0498E90098B919 /* MessageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D1792F0498E90098B919 /* MessageContent.swift */; };
+		4E80D17C2F0498FA0098B919 /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D17B2F0498FA0098B919 /* ImageProcessor.swift */; };
+		4E80D17E2F04990B0098B919 /* ImageAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80D17D2F04990B0098B919 /* ImageAttachmentView.swift */; };
 		4EDE84102EFE3A9400EFB166 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83FB2EFE3A9400EFB166 /* Conversation.swift */; };
 		4EDE84112EFE3A9400EFB166 /* ConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83FF2EFE3A9400EFB166 /* ConversationManager.swift */; };
 		4EDE84122EFE3A9400EFB166 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDE83FA2EFE3A9400EFB166 /* AudioRecorder.swift */; };
@@ -47,6 +50,9 @@
 		4E80D16F2F016F0A0098B919 /* ScreenshotCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotCapture.swift; sourceTree = "<group>"; };
 		4E80D1732F016F1B0098B919 /* ScreenshotOverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotOverlayWindow.swift; sourceTree = "<group>"; };
 		4E80D1752F016F2A0098B919 /* GlobalScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalScreenshotManager.swift; sourceTree = "<group>"; };
+		4E80D1792F0498E90098B919 /* MessageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContent.swift; sourceTree = "<group>"; };
+		4E80D17B2F0498FA0098B919 /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
+		4E80D17D2F04990B0098B919 /* ImageAttachmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAttachmentView.swift; sourceTree = "<group>"; };
 		4EDE83E72EFE3A2F00EFB166 /* VolcanoChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VolcanoChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EDE83F62EFE3A9400EFB166 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EDE83F72EFE3A9400EFB166 /* VolcanoChatbotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolcanoChatbotApp.swift; sourceTree = "<group>"; };
@@ -129,6 +135,7 @@
 		4EDE83FD2EFE3A9400EFB166 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4E80D1792F0498E90098B919 /* MessageContent.swift */,
 				4EDE83F92EFE3A9400EFB166 /* AudioPlayer.swift */,
 				4EDE83FA2EFE3A9400EFB166 /* AudioRecorder.swift */,
 				4EDE83FB2EFE3A9400EFB166 /* Conversation.swift */,
@@ -158,6 +165,7 @@
 		4EDE84062EFE3A9400EFB166 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				4E80D17B2F0498FA0098B919 /* ImageProcessor.swift */,
 				4E80D16D2F016F0A0098B919 /* ClipboardHelper.swift */,
 				4E80D16E2F016F0A0098B919 /* ScreenRecordingPermissionHelper.swift */,
 				4E80D16F2F016F0A0098B919 /* ScreenshotCapture.swift */,
@@ -184,6 +192,7 @@
 		4EDE840F2EFE3A9400EFB166 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4E80D17D2F04990B0098B919 /* ImageAttachmentView.swift */,
 				4E80D1732F016F1B0098B919 /* ScreenshotOverlayWindow.swift */,
 				4E80D16B2F00B8AB0098B919 /* MarkdownText.swift */,
 				4EDE84292EFE5B7500EFB166 /* RecordingFloatingPanel.swift */,
@@ -275,6 +284,7 @@
 				4EDE84252EFE42BB00EFB166 /* VolcanoConfig.swift in Sources */,
 				4EDE84262EFE42BB00EFB166 /* VolcanoSigner.swift in Sources */,
 				4E80D1702F016F0A0098B919 /* ClipboardHelper.swift in Sources */,
+				4E80D17A2F0498E90098B919 /* MessageContent.swift in Sources */,
 				4E80D1712F016F0A0098B919 /* ScreenRecordingPermissionHelper.swift in Sources */,
 				4E80D1722F016F0A0098B919 /* ScreenshotCapture.swift in Sources */,
 				4EDE84102EFE3A9400EFB166 /* Conversation.swift in Sources */,
@@ -284,11 +294,13 @@
 				4EDE84132EFE3A9400EFB166 /* VolcanoLLMService.swift in Sources */,
 				4E80D16C2F00B8AB0098B919 /* MarkdownText.swift in Sources */,
 				4EDE84142EFE3A9400EFB166 /* SettingsView.swift in Sources */,
+				4E80D17E2F04990B0098B919 /* ImageAttachmentView.swift in Sources */,
 				4EDE84152EFE3A9400EFB166 /* AudioPlayer.swift in Sources */,
 				4EDE84162EFE3A9400EFB166 /* VolcanoASRService.swift in Sources */,
 				4E80D1762F016F2A0098B919 /* GlobalScreenshotManager.swift in Sources */,
 				4EDE84172EFE3A9400EFB166 /* VolcanoChatbotApp.swift in Sources */,
 				4EDE84182EFE3A9400EFB166 /* ChatView.swift in Sources */,
+				4E80D17C2F0498FA0098B919 /* ImageProcessor.swift in Sources */,
 				4EDE84192EFE3A9400EFB166 /* InputBar.swift in Sources */,
 				4E80D1742F016F1B0098B919 /* ScreenshotOverlayWindow.swift in Sources */,
 				6623649FBEF34DDB95DDA76F /* HotkeyRecorderView.swift in Sources */,

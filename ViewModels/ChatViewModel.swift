@@ -3,6 +3,7 @@ import SwiftUI
 
 class ChatViewModel: ObservableObject {
     @Published var inputText = ""
+    @Published var imageAttachments: [ImageAttachment] = []  // 图片附件
     @Published var isRecording = false
     var conversationManager = ConversationManager.shared
     private let audioRecorder = AudioRecorder()
@@ -10,13 +11,24 @@ class ChatViewModel: ObservableObject {
     private var currentRecordingURL: URL?
 
     func sendTextMessage() {
-        guard !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let images = imageAttachments
 
-        let message = inputText
+        // 至少要有文本或图片
+        guard !text.isEmpty || !images.isEmpty else { return }
+
+        // 清空输入框和图片附件
         inputText = ""
+        imageAttachments = []
 
         Task {
-            await conversationManager.sendMessage(message)
+            if images.isEmpty {
+                // 纯文本消息
+                await conversationManager.sendMessage(text)
+            } else {
+                // 多模态消息（文本 + 图片）
+                await conversationManager.sendMessage(text: text, images: images)
+            }
         }
     }
 
