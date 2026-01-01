@@ -1,12 +1,26 @@
 import SwiftUI
 import AppKit
 
+// MARK: - Drawing Path
+
+/// 涂鸦路径
+struct DrawingPath: Identifiable {
+    let id = UUID()
+    var points: [CGPoint] = []
+}
+
+/// 截图结果（包含区域和涂鸦）
+struct ScreenshotResult {
+    let rect: CGRect
+    let drawings: [DrawingPath]
+}
+
 // MARK: - Screenshot Overlay Window
 
 /// 全屏覆盖窗口，用于截图区域选择
 class ScreenshotOverlayWindow: NSWindow {
 
-    var onRegionSelected: ((CGRect) -> Void)?
+    var onRegionSelected: ((ScreenshotResult) -> Void)?
     var onCancelled: (() -> Void)?
 
     private var localEventMonitor: Any?
@@ -35,8 +49,8 @@ class ScreenshotOverlayWindow: NSWindow {
 
         // 设置 SwiftUI 内容视图
         let contentView = ScreenshotSelectionView(
-            onComplete: { [weak self] rect in
-                self?.onRegionSelected?(rect)
+            onComplete: { [weak self] result in
+                self?.onRegionSelected?(result)
             },
             onCancel: { [weak self] in
                 self?.onCancelled?()
@@ -108,47 +122,52 @@ struct ScreenshotSelectionView: View {
     @State private var startPoint: CGPoint?
     @State private var currentPoint: CGPoint?
     @State private var isDragging = false
+    @State private var isSelectionComplete = false  // 选区完成状态
+    @State private var finalRect: CGRect?  // 最终选定的区域
 
-    let onComplete: (CGRect) -> Void
+    // 涂鸦相关状态
+    @State private var drawingPaths: [DrawingPath] = []  // 所有涂鸦路径
+    @State private var currentDrawingPath: DrawingPath?  // 当前正在绘制的路径
+    @State private var isDrawing = false  // 是否正在涂鸦
+
+    let onComplete: (ScreenshotResult) -> Void
     let onCancel: () -> Void
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 // 背景遮罩（根据选区分成四块，让选区内部完全透明）
-                if let start = startPoint, let current = currentPoint {
-                    let selectionRect = normalizedRect(from: start, to: current)
-
+                if let rect = displayRect {
                     // 上方遮罩
-                    if selectionRect.minY > 0 {
+                    if rect.minY > 0 {
                         Rectangle()
                             .fill(Color.black.opacity(0.4))
-                            .frame(width: geometry.size.width, height: selectionRect.minY)
-                            .position(x: geometry.size.width / 2, y: selectionRect.minY / 2)
+                            .frame(width: geometry.size.width, height: rect.minY)
+                            .position(x: geometry.size.width / 2, y: rect.minY / 2)
                     }
 
                     // 下方遮罩
-                    if selectionRect.maxY < geometry.size.height {
+                    if rect.maxY < geometry.size.height {
                         Rectangle()
                             .fill(Color.black.opacity(0.4))
-                            .frame(width: geometry.size.width, height: geometry.size.height - selectionRect.maxY)
-                            .position(x: geometry.size.width / 2, y: selectionRect.maxY + (geometry.size.height - selectionRect.maxY) / 2)
+                            .frame(width: geometry.size.width, height: geometry.size.height - rect.maxY)
+                            .position(x: geometry.size.width / 2, y: rect.maxY + (geometry.size.height - rect.maxY) / 2)
                     }
 
                     // 左侧遮罩
-                    if selectionRect.minX > 0 {
+                    if rect.minX > 0 {
                         Rectangle()
                             .fill(Color.black.opacity(0.4))
-                            .frame(width: selectionRect.minX, height: selectionRect.height)
-                            .position(x: selectionRect.minX / 2, y: selectionRect.midY)
+                            .frame(width: rect.minX, height: rect.height)
+                            .position(x: rect.minX / 2, y: rect.midY)
                     }
 
                     // 右侧遮罩
-                    if selectionRect.maxX < geometry.size.width {
+                    if rect.maxX < geometry.size.width {
                         Rectangle()
                             .fill(Color.black.opacity(0.4))
-                            .frame(width: geometry.size.width - selectionRect.maxX, height: selectionRect.height)
-                            .position(x: selectionRect.maxX + (geometry.size.width - selectionRect.maxX) / 2, y: selectionRect.midY)
+                            .frame(width: geometry.size.width - rect.maxX, height: rect.height)
+                            .position(x: rect.maxX + (geometry.size.width - rect.maxX) / 2, y: rect.midY)
                     }
                 } else {
                     // 没有选区时，显示全屏半透明遮罩
@@ -157,29 +176,27 @@ struct ScreenshotSelectionView: View {
                 }
 
                 // 选择区域边框和装饰
-                if let start = startPoint, let current = currentPoint {
-                    let selectionRect = normalizedRect(from: start, to: current)
-
+                if let rect = displayRect {
                     // 明亮的边框（多层增强可见性）
-                    if selectionRect.width > 0 && selectionRect.height > 0 {
+                    if rect.width > 0 && rect.height > 0 {
                         Rectangle()
                             .strokeBorder(Color.white, lineWidth: 3)
-                            .frame(width: selectionRect.width, height: selectionRect.height)
-                            .position(x: selectionRect.midX, y: selectionRect.midY)
+                            .frame(width: rect.width, height: rect.height)
+                            .position(x: rect.midX, y: rect.midY)
                             .shadow(color: .black.opacity(0.5), radius: 2, x: 0, y: 0)
                     }
 
                     // 内层蓝色边框（只在选区足够大时显示）
-                    if selectionRect.width > 10 && selectionRect.height > 10 {
+                    if rect.width > 10 && rect.height > 10 {
                         Rectangle()
                             .strokeBorder(Color.blue.opacity(0.8), lineWidth: 1)
-                            .frame(width: max(1, selectionRect.width - 6), height: max(1, selectionRect.height - 6))
-                            .position(x: selectionRect.midX, y: selectionRect.midY)
+                            .frame(width: max(1, rect.width - 6), height: max(1, rect.height - 6))
+                            .position(x: rect.midX, y: rect.midY)
                     }
 
                     // 尺寸标签
-                    if selectionRect.width > 50 && selectionRect.height > 20 {
-                        Text("\(Int(selectionRect.width)) × \(Int(selectionRect.height))")
+                    if rect.width > 50 && rect.height > 20 {
+                        Text("\(Int(rect.width)) × \(Int(rect.height))")
                             .font(.system(size: 12, weight: .medium))
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
@@ -189,29 +206,144 @@ struct ScreenshotSelectionView: View {
                             )
                             .foregroundColor(.white)
                             .position(
-                                x: selectionRect.midX,
-                                y: max(selectionRect.minY - 20, 20)  // 确保不超出屏幕
+                                x: rect.midX,
+                                y: max(rect.minY - 20, 20)  // 确保不超出屏幕
                             )
                     }
 
-                    // 提示文本（在选区内显示）
-                    if selectionRect.width > 150 && selectionRect.height > 50 {
-                        VStack(spacing: 4) {
-                            Text("松开鼠标确认")
-                                .font(.system(size: 11))
-                            Text("按 ESC 取消")
-                                .font(.system(size: 10))
+                    // 涂鸦路径渲染（只在选区内显示）
+                    if isSelectionComplete {
+                        // 剪裁到选区内并转换坐标
+                        Canvas { context, size in
+                            // 渲染所有完成的涂鸦路径
+                            for path in drawingPaths {
+                                guard !path.points.isEmpty else { continue }
+
+                                var canvasPath = Path()
+                                // 转换为相对于选区的坐标
+                                let firstPoint = CGPoint(
+                                    x: path.points[0].x - rect.minX,
+                                    y: path.points[0].y - rect.minY
+                                )
+                                canvasPath.move(to: firstPoint)
+
+                                for point in path.points.dropFirst() {
+                                    let relativePoint = CGPoint(
+                                        x: point.x - rect.minX,
+                                        y: point.y - rect.minY
+                                    )
+                                    canvasPath.addLine(to: relativePoint)
+                                }
+
+                                context.stroke(
+                                    canvasPath,
+                                    with: .color(.red),
+                                    lineWidth: 3
+                                )
+                            }
+
+                            // 渲染当前正在绘制的路径
+                            if let currentPath = currentDrawingPath, !currentPath.points.isEmpty {
+                                var canvasPath = Path()
+                                let firstPoint = CGPoint(
+                                    x: currentPath.points[0].x - rect.minX,
+                                    y: currentPath.points[0].y - rect.minY
+                                )
+                                canvasPath.move(to: firstPoint)
+
+                                for point in currentPath.points.dropFirst() {
+                                    let relativePoint = CGPoint(
+                                        x: point.x - rect.minX,
+                                        y: point.y - rect.minY
+                                    )
+                                    canvasPath.addLine(to: relativePoint)
+                                }
+
+                                context.stroke(
+                                    canvasPath,
+                                    with: .color(.red),
+                                    lineWidth: 3
+                                )
+                            }
+                        }
+                        .frame(width: rect.width, height: rect.height)
+                        .position(x: rect.midX, y: rect.midY)
+                        .allowsHitTesting(false)  // 不拦截鼠标事件
+                    }
+
+                    // 选区完成后显示确认/取消按钮
+                    if isSelectionComplete {
+                        HStack(spacing: 12) {
+                            // 取消按钮
+                            Button(action: {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    resetSelection()
+                                }
+                            }) {
+                                Text("取消")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .fill(Color.red.opacity(0.8))
+                                    )
+                            }
+                            .buttonStyle(.plain)
+
+                            // 确定按钮
+                            Button(action: {
+                                if let finalRect = finalRect {
+                                    let result = ScreenshotResult(
+                                        rect: finalRect,
+                                        drawings: drawingPaths
+                                    )
+                                    onComplete(result)
+                                }
+                            }) {
+                                Text("确定")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .fill(Color.green.opacity(0.8))
+                                    )
+                            }
+                            .buttonStyle(.plain)
                         }
                         .padding(8)
                         .background(
-                            RoundedRectangle(cornerRadius: 6)
+                            RoundedRectangle(cornerRadius: 8)
                                 .fill(Color.black.opacity(0.7))
                         )
-                        .foregroundColor(.white)
                         .position(
-                            x: selectionRect.midX,
-                            y: selectionRect.midY
+                            x: rect.midX,
+                            y: min(rect.maxY + 40, geometry.size.height - 30)  // 在选区下方，不超出屏幕
                         )
+                        .transition(.scale.combined(with: .opacity))
+                    } else if isDragging {
+                        // 拖拽时的提示文本
+                        if rect.width > 150 && rect.height > 50 {
+                            VStack(spacing: 4) {
+                                Text("松开鼠标继续")
+                                    .font(.system(size: 11))
+                                Text("按 ESC 取消")
+                                    .font(.system(size: 10))
+                            }
+                            .padding(8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(Color.black.opacity(0.7))
+                            )
+                            .foregroundColor(.white)
+                            .position(
+                                x: rect.midX,
+                                y: rect.midY
+                            )
+                        }
                     }
                 } else {
                     // 初始提示
@@ -240,6 +372,23 @@ struct ScreenshotSelectionView: View {
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged { value in
+                        // 如果已经完成选择，处理涂鸦
+                        if isSelectionComplete {
+                            // 检查是否在选区内
+                            if let rect = finalRect, rect.contains(value.location) {
+                                if !isDrawing {
+                                    // 开始新的涂鸦路径
+                                    isDrawing = true
+                                    currentDrawingPath = DrawingPath(points: [value.location])
+                                } else {
+                                    // 继续当前涂鸦路径
+                                    currentDrawingPath?.points.append(value.location)
+                                }
+                            }
+                            return
+                        }
+
+                        // 原有的选区拖拽逻辑
                         if startPoint == nil {
                             startPoint = value.startLocation
                             isDragging = true
@@ -247,17 +396,32 @@ struct ScreenshotSelectionView: View {
                         currentPoint = value.location
                     }
                     .onEnded { value in
+                        // 如果正在涂鸦，结束涂鸦路径
+                        if isDrawing {
+                            if let path = currentDrawingPath {
+                                drawingPaths.append(path)
+                            }
+                            currentDrawingPath = nil
+                            isDrawing = false
+                            return
+                        }
+
+                        // 如果已经完成选择，不响应拖拽
+                        guard !isSelectionComplete else { return }
+
                         if let start = startPoint {
                             let rect = normalizedRect(from: start, to: value.location)
 
-                            // 只有当选区足够大时才确认（至少 10x10 像素）
+                            // 只有当选区足够大时才显示确认按钮（至少 10x10 像素）
                             if rect.width >= 10 && rect.height >= 10 {
-                                onComplete(rect)
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    finalRect = rect
+                                    isSelectionComplete = true
+                                    isDragging = false
+                                }
                             } else {
                                 // 选区太小，重置
-                                startPoint = nil
-                                currentPoint = nil
-                                isDragging = false
+                                resetSelection()
                             }
                         }
                     }
@@ -271,6 +435,28 @@ struct ScreenshotSelectionView: View {
                 NSCursor.pop()
             }
         }
+    }
+
+    /// 当前显示的矩形（拖拽中或已完成）
+    private var displayRect: CGRect? {
+        if let finalRect = finalRect {
+            return finalRect
+        } else if let start = startPoint, let current = currentPoint {
+            return normalizedRect(from: start, to: current)
+        }
+        return nil
+    }
+
+    /// 重置选择状态
+    private func resetSelection() {
+        startPoint = nil
+        currentPoint = nil
+        isDragging = false
+        isSelectionComplete = false
+        finalRect = nil
+        drawingPaths = []
+        currentDrawingPath = nil
+        isDrawing = false
     }
 
     /// 根据两个点计算规范化的矩形（确保宽高为正）
@@ -293,8 +479,9 @@ struct ScreenshotSelectionView: View {
 
 #Preview {
     ScreenshotSelectionView(
-        onComplete: { rect in
-            print("Selected rect: \(rect)")
+        onComplete: { result in
+            print("Selected rect: \(result.rect)")
+            print("Drawings count: \(result.drawings.count)")
         },
         onCancel: {
             print("Cancelled")

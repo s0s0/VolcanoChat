@@ -112,9 +112,9 @@ class GlobalScreenshotManager: ObservableObject {
         // 显示区域选择窗口
         overlayWindow = ScreenshotOverlayWindow()
 
-        overlayWindow?.onRegionSelected = { [weak self] rect in
+        overlayWindow?.onRegionSelected = { [weak self] result in
             Task {
-                await self?.captureRegion(rect)
+                await self?.captureRegion(result)
             }
         }
 
@@ -150,11 +150,12 @@ class GlobalScreenshotManager: ObservableObject {
     }
 
     @available(macOS 13.0, *)
-    private func captureRegion(_ rect: CGRect) async {
-        print("📸 [GlobalScreenshot] 用户选择区域: \(rect)")
+    private func captureRegion(_ result: ScreenshotResult) async {
+        print("📸 [GlobalScreenshot] 用户选择区域: \(result.rect)")
+        print("🎨 [GlobalScreenshot] 涂鸦路径数量: \(result.drawings.count)")
 
         // 验证区域有效性
-        guard screenshotCapture.isValidRect(rect) else {
+        guard screenshotCapture.isValidRect(result.rect) else {
             print("❌ [GlobalScreenshot] 无效的截图区域")
             showErrorAlert(message: "选择的区域无效，请重试")
             resetState()
@@ -168,11 +169,17 @@ class GlobalScreenshotManager: ObservableObject {
         try? await Task.sleep(nanoseconds: 100_000_000)  // 0.1 秒
 
         // 执行截图（会自动排除应用窗口）
-        guard let image = await screenshotCapture.capture(rect: rect) else {
+        guard var image = await screenshotCapture.capture(rect: result.rect) else {
             print("❌ [GlobalScreenshot] 截图失败")
             showErrorAlert(message: "截图失败，请重试")
             resetState()
             return
+        }
+
+        // 如果有涂鸦，将涂鸦渲染到图片上
+        if !result.drawings.isEmpty {
+            image = renderDrawingsOnImage(image, drawings: result.drawings, rect: result.rect)
+            print("✅ [GlobalScreenshot] 涂鸦已渲染到截图")
         }
 
         // 保存到剪贴板
@@ -188,6 +195,55 @@ class GlobalScreenshotManager: ObservableObject {
     private func cancelScreenshot() {
         print("🚫 [GlobalScreenshot] 用户取消截图")
         resetState()
+    }
+
+    /// 将涂鸦路径渲染到截图上
+    private func renderDrawingsOnImage(_ image: NSImage, drawings: [DrawingPath], rect: CGRect) -> NSImage {
+        // 创建新图片
+        let newImage = NSImage(size: image.size)
+
+        newImage.lockFocus()
+
+        // 绘制原始图片
+        image.draw(at: .zero, from: NSRect(origin: .zero, size: image.size), operation: .sourceOver, fraction: 1.0)
+
+        // 设置绘制上下文
+        guard let context = NSGraphicsContext.current?.cgContext else {
+            newImage.unlockFocus()
+            return image
+        }
+
+        // 配置绘制样式（红色，3像素宽）
+        context.setStrokeColor(NSColor.red.cgColor)
+        context.setLineWidth(3.0)
+        context.setLineCap(.round)
+        context.setLineJoin(.round)
+
+        // 绘制所有涂鸦路径
+        for path in drawings {
+            guard !path.points.isEmpty else { continue }
+
+            // 将屏幕坐标转换为图片坐标
+            // 注意：NSImage 坐标系是左下角为原点，Y轴向上
+            // 屏幕坐标系是左上角为原点，Y轴向下
+            let imagePoints = path.points.map { point in
+                CGPoint(
+                    x: point.x - rect.minX,
+                    y: image.size.height - (point.y - rect.minY)  // 翻转 Y 轴
+                )
+            }
+
+            context.beginPath()
+            context.move(to: imagePoints[0])
+            for point in imagePoints.dropFirst() {
+                context.addLine(to: point)
+            }
+            context.strokePath()
+        }
+
+        newImage.unlockFocus()
+
+        return newImage
     }
 
     private func resetState() {
