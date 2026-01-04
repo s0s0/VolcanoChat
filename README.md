@@ -9,8 +9,10 @@
 [![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%2013.0+-blue.svg)](https://www.apple.com/macos/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/s0s0/VolcanoChat)](https://github.com/s0s0/VolcanoChat/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/s0s0/VolcanoChat/total)](https://github.com/s0s0/VolcanoChat/releases)
 
-[功能特性](#功能特性) • [安装](#安装) • [配置](#配置) • [使用说明](#使用说明) • [技术栈](#技术栈) • [开发](#开发)
+[功能特性](#功能特性) • [下载安装](#安装) • [配置](#配置) • [使用说明](#使用说明) • [技术栈](#技术栈) • [开发](#开发)
 
 </div>
 
@@ -74,9 +76,18 @@
 - macOS 13.0 或更高版本
 - 火山引擎账号（方舟平台 + 语音服务）
 
-### 从源码编译
+### 方式一：下载预编译版本（推荐）
+
+📥 **[下载最新版本 v1.0.0](https://github.com/s0s0/VolcanoChat/releases/latest)**
+
+1. 下载 `VolcanoChat-v1.0.0.zip`
+2. 解压后将 `VolcanoChat.app` 拖入"应用程序"文件夹
+3. 右键点击应用 → 选择"打开"（首次运行绕过 Gatekeeper）
+4. 按照应用内提示配置火山引擎 API
+
+### 方式二：从源码编译
 ```bash
-git clone https://github.com/yourusername/VolcanoChat.git
+git clone https://github.com/s0s0/VolcanoChat.git
 cd VolcanoChat
 open VolcanoChat.xcodeproj
 ```
@@ -266,6 +277,31 @@ await conversationManager.sendMessage(text: recognizedText, images: [imageAttach
 
 ---
 
+## 📝 更新日志
+
+### v1.0.0 (2026-01-04)
+
+**首个正式版本发布！**
+
+#### ✨ 新功能
+- 🤖 集成火山引擎豆包大模型，支持流式响应
+- 🎤 语音识别（ASR）：全局快捷键录音，精美动画
+- 🔊 语音合成（TTS）：自动播报 AI 回复，Markdown 格式清理
+- 📸 智能截图：区域选择、涂鸦标注
+- 🖼️ 多模态交互：截图 + 语音 → AI
+- ⌨️ 全局快捷键：录音（⌥ Option）、截图（⌃A）
+- 🌐 联网搜索：可选功能
+- 🎨 圆角应用图标
+- 📱 图片消息左对齐显示
+
+#### 🔧 技术亮点
+- SwiftUI + AppKit 混合开发
+- ScreenCaptureKit 截图
+- 三层脉冲动画 + 实时音量波形
+- 默认简洁回复提示词
+
+---
+
 ## 🙏 致谢
 
 - [火山引擎](https://www.volcengine.com/) - 提供 AI 服务支持
@@ -276,8 +312,8 @@ await conversationManager.sendMessage(text: recognizedText, images: [imageAttach
 ## 📮 联系方式
 
 如有问题或建议，欢迎：
-- 提交 [Issue](https://github.com/yourusername/VolcanoChat/issues)
-- 发起 [Pull Request](https://github.com/yourusername/VolcanoChat/pulls)
+- 提交 [Issue](https://github.com/s0s0/VolcanoChat/issues)
+- 发起 [Pull Request](https://github.com/s0s0/VolcanoChat/pulls)
 
 ---
 
