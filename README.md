@@ -89,14 +89,14 @@ open VolcanoChat.xcodeproj
 
 ### 1. 火山引擎方舟平台
 
-访问 [火山引擎方舟平台](https://console.volcengine.com/ark)
+访问 [火山引擎方舟平台](https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey)
 
 1. 创建应用并获取 **API Key**
-2. 创建推理接入点并获取 **Endpoint ID**（通常以 `ep-` 开头）
+2. 创建推理接入点并获取 **[Model ID](https://console.volcengine.com/ark/region:ark+cn-beijing/model)**
 
 ### 2. 语音服务
 
-访问 [火山引擎语音技术控制台](https://console.volcengine.com/speech)
+访问 [火山引擎语音技术控制台](https://console.volcengine.com/speech/service)（切换到旧版，选择音视频字幕生成）
 
 1. 创建项目并获取 **App ID**
 2. 生成 **Access Token**
@@ -107,7 +107,7 @@ open VolcanoChat.xcodeproj
 
 #### 方舟平台配置
 - **API Key**: 粘贴方舟平台的 API Key
-- **模型/Endpoint ID**: 粘贴 Endpoint ID（默认使用 `doubao-seed-1-6-lite-251015`）
+- **模型/Endpoint ID**: 粘贴 Model ID（默认使用 `doubao-seed-1-6-lite-251015`）
 
 #### 语音服务配置
 - **App ID**: 粘贴语音服务的 App ID
@@ -119,11 +119,11 @@ open VolcanoChat.xcodeproj
 
 #### 功能开关
 - **自动语音播报**: AI 回复自动转语音播放（默认开启）
-- **启用联网搜索**: 允许 AI 搜索实时信息（默认关闭）
+- **启用联网搜索**: 允许 AI 搜索实时信息（默认关闭，可以在[联网内容插件](https://console.volcengine.com/ark/region:ark+cn-beijing/components)处开启）
 
 #### 系统提示词（可选）
 - 留空使用默认提示词：`你会言简意赅的输出内容，不要说没用的废话，只输出必要信息`
-- 也可自定义 AI 角色和行为
+- 可自定义
 
 ### 4. 权限授予
 
@@ -263,12 +263,6 @@ func renderDrawingsOnImage(_ image: NSImage, drawings: [DrawingPath]) -> NSImage
 ```swift
 await conversationManager.sendMessage(text: recognizedText, images: [imageAttachment])
 ```
-
----
-
-## 📝 许可证
-
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
 ---
 
