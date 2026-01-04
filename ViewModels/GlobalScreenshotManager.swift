@@ -485,26 +485,15 @@ class GlobalScreenshotManager: ObservableObject {
     // MARK: - User Feedback
 
     private func showSuccessFeedback() {
-        showSuccessFeedback(message: "截图已保存到剪贴板")
+        // 静默成功，不显示任何提示
     }
 
     private func showSuccessFeedback(message: String) {
-        // 播放系统提示音
-        NSSound.beep()
-
-        // 可选：显示短暂的成功通知
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let notification = NSUserNotification()
-            notification.title = "截图成功"
-            notification.informativeText = message
-            notification.soundName = nil  // 已经播放过提示音了
-
-            NSUserNotificationCenter.default.deliver(notification)
-        }
+        // 静默成功，不显示任何提示
     }
 
     private func showErrorAlert(message: String) {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             let alert = NSAlert()
             alert.messageText = "截图失败"
             alert.informativeText = message

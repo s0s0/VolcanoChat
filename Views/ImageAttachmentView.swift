@@ -95,6 +95,7 @@ struct MessageImageView: View {
                     )
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -144,7 +145,7 @@ struct ImageGridView: View {
     var body: some View {
         let columns = gridColumns(for: attachments.count)
 
-        LazyVGrid(columns: columns, spacing: 8) {
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
             ForEach(attachments, id: \.id) { attachment in
                 MessageImageView(attachment: attachment)
             }
@@ -154,15 +155,15 @@ struct ImageGridView: View {
     private func gridColumns(for count: Int) -> [GridItem] {
         switch count {
         case 1:
-            return [GridItem(.flexible())]
+            return [GridItem(.flexible(), alignment: .leading)]
         case 2:
-            return [GridItem(.flexible()), GridItem(.flexible())]
+            return [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)]
         case 3:
-            return [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+            return [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)]
         case 4:
-            return [GridItem(.flexible()), GridItem(.flexible())]
+            return [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)]
         default:  // 5 张
-            return [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+            return [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)]
         }
     }
 }

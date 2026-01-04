@@ -47,12 +47,14 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     func stop() {
         audioPlayer?.stop()
+        audioPlayer = nil
         isPlaying = false
     }
 
     // MARK: - AVAudioPlayerDelegate
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        audioPlayer = nil
         isPlaying = false
     }
 }

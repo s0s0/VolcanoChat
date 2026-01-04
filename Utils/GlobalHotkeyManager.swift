@@ -224,7 +224,7 @@ class GlobalHotkeyManager {
         DispatchQueue.main.async {
             let alert = NSAlert()
             alert.messageText = "需要辅助功能权限"
-            alert.informativeText = "全局快捷键功能需要辅助功能权限才能工作。\n\n请前往：\n系统设置 → 隐私与安全性 → 辅助功能\n\n将 Volcano Chatbot 添加到列表中。"
+            alert.informativeText = "全局快捷键功能需要辅助功能权限才能工作。\n\n请前往：\n系统设置 → 隐私与安全性 → 辅助功能\n\n将 VolcanoChat 添加到列表中。"
             alert.alertStyle = .warning
             alert.addButton(withTitle: "打开系统设置")
             alert.addButton(withTitle: "稍后")

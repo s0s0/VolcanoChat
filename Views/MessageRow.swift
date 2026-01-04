@@ -16,8 +16,9 @@ struct MessageRow: View {
                     // 图片内容
                     if message.hasImages {
                         ImageGridView(attachments: message.imageAttachments)
-                            .padding(.horizontal, message.content.isEmpty ? 0 : 14)
-                            .padding(.top, message.content.isEmpty ? 0 : 10)
+                            .padding(.leading, 14)
+                            .padding(.trailing, 14)
+                            .padding(.top, message.content.isEmpty ? 10 : 10)
                     }
 
                     // 文本内容

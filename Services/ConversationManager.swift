@@ -3,6 +3,9 @@ import Foundation
 class ConversationManager: ObservableObject {
     static let shared = ConversationManager()
 
+    // 默认 system prompt
+    static let defaultSystemPrompt = "你会言简意赅的输出内容，不要说没用的废话，只输出必要信息"
+
     @Published var conversation: Conversation
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -102,12 +105,13 @@ class ConversationManager: ObservableObject {
         // 过滤掉空的消息（只发送有内容的消息给 LLM）
         var messagesToSend = conversation.messages.filter { !$0.content.isEmpty }
 
-        // 如果配置了 system prompt，在消息列表开头插入 system 消息（不保存到 conversation 中，只发送给 LLM）
-        let systemPrompt = UserDefaults.standard.string(forKey: "systemPrompt") ?? ""
-        if !systemPrompt.isEmpty {
-            let systemMessage = Message(role: .system, content: systemPrompt)
-            messagesToSend.insert(systemMessage, at: 0)
-        }
+        // 获取用户自定义的 system prompt，如果为空则使用默认 prompt
+        let customSystemPrompt = UserDefaults.standard.string(forKey: "systemPrompt") ?? ""
+        let systemPrompt = customSystemPrompt.isEmpty ? ConversationManager.defaultSystemPrompt : customSystemPrompt
+
+        // 在消息列表开头插入 system 消息（不保存到 conversation 中，只发送给 LLM）
+        let systemMessage = Message(role: .system, content: systemPrompt)
+        messagesToSend.insert(systemMessage, at: 0)
 
         do {
             // 使用流式响应，并根据设置启用联网搜索
@@ -149,11 +153,69 @@ class ConversationManager: ObservableObject {
 
     private func playResponse(text: String) async {
         do {
-            let audioData = try await ttsService.synthesizeSpeech(text: text)
+            // 清理 markdown 格式后再合成语音
+            let cleanedText = cleanMarkdown(text)
+            let audioData = try await ttsService.synthesizeSpeech(text: cleanedText)
             audioPlayer.play(data: audioData)
         } catch {
             print("TTS failed: \(error)")
         }
+    }
+
+    /// 清理 markdown 格式符号，保留纯文本内容
+    private func cleanMarkdown(_ text: String) -> String {
+        var result = text
+
+        // 移除代码块 ```...```
+        result = result.replacingOccurrences(of: "```[^`]*```", with: "", options: .regularExpression)
+
+        // 移除行内代码 `...`
+        result = result.replacingOccurrences(of: "`([^`]+)`", with: "$1", options: .regularExpression)
+
+        // 移除粗体 **...** 和 __...__
+        result = result.replacingOccurrences(of: "\\*\\*([^*]+)\\*\\*", with: "$1", options: .regularExpression)
+        result = result.replacingOccurrences(of: "__([^_]+)__", with: "$1", options: .regularExpression)
+
+        // 移除斜体 *...* 和 _..._
+        result = result.replacingOccurrences(of: "\\*([^*]+)\\*", with: "$1", options: .regularExpression)
+        result = result.replacingOccurrences(of: "_([^_]+)_", with: "$1", options: .regularExpression)
+
+        // 移除删除线 ~~...~~
+        result = result.replacingOccurrences(of: "~~([^~]+)~~", with: "$1", options: .regularExpression)
+
+        // 移除链接 [text](url)，保留文本
+        result = result.replacingOccurrences(of: "\\[([^\\]]+)\\]\\([^)]+\\)", with: "$1", options: .regularExpression)
+
+        // 移除图片 ![alt](url)
+        result = result.replacingOccurrences(of: "!\\[([^\\]]*)\\]\\([^)]+\\)", with: "", options: .regularExpression)
+
+        // 移除标题符号 #
+        result = result.replacingOccurrences(of: "^#{1,6}\\s+", with: "", options: .regularExpression)
+        result = result.replacingOccurrences(of: "\n#{1,6}\\s+", with: "\n", options: .regularExpression)
+
+        // 移除引用符号 >
+        result = result.replacingOccurrences(of: "^>\\s+", with: "", options: .regularExpression)
+        result = result.replacingOccurrences(of: "\n>\\s+", with: "\n", options: .regularExpression)
+
+        // 移除列表符号 - 和 *
+        result = result.replacingOccurrences(of: "^[-*+]\\s+", with: "", options: .regularExpression)
+        result = result.replacingOccurrences(of: "\n[-*+]\\s+", with: "\n", options: .regularExpression)
+
+        // 移除有序列表数字
+        result = result.replacingOccurrences(of: "^\\d+\\.\\s+", with: "", options: .regularExpression)
+        result = result.replacingOccurrences(of: "\n\\d+\\.\\s+", with: "\n", options: .regularExpression)
+
+        // 移除水平分割线
+        result = result.replacingOccurrences(of: "^[-*_]{3,}$", with: "", options: .regularExpression)
+        result = result.replacingOccurrences(of: "\n[-*_]{3,}\n", with: "\n", options: .regularExpression)
+
+        // 移除多余的空白行
+        result = result.replacingOccurrences(of: "\n{3,}", with: "\n\n", options: .regularExpression)
+
+        // 去除首尾空白
+        result = result.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return result
     }
 
     @MainActor

@@ -14,7 +14,7 @@ struct ChatView: View {
             VStack(spacing: 0) {
                 // 工具栏
                 HStack {
-                    Text("Volcano Chatbot")
+                    Text("VolcanoChat")
                         .font(.system(size: 16, weight: .semibold))
 
                     Spacer()

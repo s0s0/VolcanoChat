@@ -133,6 +133,8 @@ class AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate {
     func stopRecording() -> URL? {
         guard isRecording else { return nil }
 
+        let recordingURL = audioRecorder?.url
+
         audioRecorder?.stop()
         isRecording = false
         recordingLevel = 0.0
@@ -140,7 +142,10 @@ class AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate {
         levelTimer?.invalidate()
         levelTimer = nil
 
-        return audioRecorder?.url
+        // 清理音频录制器，释放资源
+        audioRecorder = nil
+
+        return recordingURL
     }
 
     private func updateMeters() {

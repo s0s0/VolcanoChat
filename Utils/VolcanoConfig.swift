@@ -12,7 +12,7 @@ struct VolcanoConfig {
     }
 
     static var modelName: String {
-        get { UserDefaults.standard.string(forKey: "volcano_model_name") ?? "doubao-pro-4k" }
+        get { UserDefaults.standard.string(forKey: "volcano_model_name") ?? "doubao-seed-1-6-lite-251015" }
         set { UserDefaults.standard.set(newValue, forKey: "volcano_model_name") }
     }
 
